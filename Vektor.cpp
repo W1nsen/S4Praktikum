@@ -1,6 +1,7 @@
 #include "Vektor.h"
 #include <iostream>
 #include <cmath>
+
 void CMyVektor::SetWert(double data, int index)
 {
     werte[index] = data;
@@ -18,53 +19,93 @@ double CMyVektor::CalcVektorLaenge()
     return sqrt(laenge);
 }
 
-void CMyVektor::Maximierung(double (*funktion)(CMyVektor x), CMyVektor x, double lambdainput = 1.0)
+void CMyVektor::Maximierung(double (*funktion)(CMyVektor x), CMyVektor x, double lambda = 1.0)
 {
-    for (int schritte = 0; schritte < 25; schritte++)
-    {
-        CMyVektor grad = gradient(x, funktion);
+    
 
-        
-        //check ob schon da
-        if(grad.CalcVektorLaenge() < 0.00001)
+    for (int schritte = 0; schritte <= 25; schritte++)
+    {
+        // gradient
+        CMyVektor grad = gradient(x, funktion);
+        double gradLaenge = grad.CalcVektorLaenge();
+
+        // aktueller Schritt
+        std::cout << "Schritt " << schritte << ":" << std::endl;
+        printVektor(x); std::cout << std::endl;
+        std::cout << "\t l " << lambda << std::endl;
+        std::cout << "\t f(x) " << funktion(x) << std::endl;
+        std::cout << "\t grad "; printVektor(grad); std::cout << std::endl;
+        std::cout << "\t ||grad|| " << gradLaenge << std::endl << std::endl;
+
+        // abbruch-check
+        if (gradLaenge < 0.00001)
         {
-            std::cout << "Ende nach " <<schritte<< " Schritten";
+            std::cout << "Ende wegen ||grad f(x)||<1e-5" << std::endl;
+            printVektor(x); std::cout << std::endl;
+            std::cout << "\t l " << lambda << std::endl;
+            std::cout << "\t f(x) " << funktion(x) << std::endl;
+            std::cout << "\t grad "; printVektor(grad); std::cout << std::endl;
+            std::cout << "\t ||grad|| " << gradLaenge << std::endl;
             break;
         }
 
+        //maximierung
+        CMyVektor xneu = x + lambda * grad;
+        double f_xneu = funktion(xneu);
 
-        CMyVektor xneu = x + lambdainput * grad;
-
-        // wenn richtig
-        if (funktion(xneu) > funktion(x))
+        //check ob neu > alt
+        if (f_xneu > funktion(x))
         {
-            // teste ob doppelt funktoiniert
-            CMyVektor xdoppelt = x + (lambdainput * 2.0) * grad;
+            std::cout << "\t x_neu = ( " ; printVektor(grad); std::cout << std::endl;
+            std::cout << "\t f(x_neu) = "; printVektor(grad); std::cout << std::endl;
 
-            // check ob doppelt funktioniert
-            if (funktion(xdoppelt) > funktion(xneu))
+            // teste doppel
+            double lambda_test = lambda * 2.0;
+            CMyVektor xtest = x + lambda_test * grad;
+            double f_xtest = funktion(xtest);
+
+            std::cout << "\t Test doppelter Schrittweite (l = " << lambda_test << "):" << std::endl;
+            std::cout << "\t x_test = ( " << xtest.GetWert(0) << "; " << xtest.GetWert(1) << ")" << std::endl;
+            std::cout << "\t f(x_test) = " << f_xtest << std::endl;
+
+            //check ob doppel > neu
+            if (f_xtest > f_xneu)
             {
-                lambdainput *= 2.0;
-                x = xdoppelt;
+                lambda = lambda_test;
+                x = xtest;
+                std::cout << "\t verdoppele Schrittweite!" << std::endl << std::endl;
             }
             else
             {
-                // setze den ersten schritt ohne doppelt als nächsten punkt
                 x = xneu;
+                std::cout << "\t behalte alte Schrittweite!" << std::endl << std::endl;
             }
         }
-        // wenn falsch
         else
         {
+            // schritt halbieren, wenn 
             while (funktion(xneu) <= funktion(x))
             {
-                lambdainput /= 2.0;
-                xneu = x + lambdainput * grad;
+                //neu ausrechnen
+                lambda /= 2.0;
+                xneu = x + lambda * grad;
+                
+                std::cout << "\t halbiere Schrittweite (lambda = " << lambda << "):" << std::endl;
+                std::cout << "\t x_neu = ( " ; printVektor(grad); std::cout << std::endl;
+                std::cout << "\t f(x_neu) = " << funktion(xneu) << std::endl << std::endl;
             }
-
             x = xneu;
         }
+
+        if(schritte == 25)
+        {
+            std::cout << "Ende wegen 25 Schritte"<<std::endl;
+
+        }
     }
+  
+        
+    
 }
 
 CMyVektor operator+(CMyVektor a, CMyVektor b)
@@ -123,4 +164,25 @@ CMyVektor CMyVektor::gradient(CMyVektor x, double (*funktion)(CMyVektor x))
     }
 
     return ergebnis;
+}
+
+void CMyVektor::printVektor(CMyVektor v) 
+{
+    std::cout << "(";
+    
+    for (int i = 0; i < v.GetDimension(); i++) 
+    {
+        // Den aktuellen Wert ausgeben
+        std::cout << v.GetWert(i);
+        
+        // check ob leztes element
+        if (i < v.GetDimension() - 1) 
+        {
+            //wenn noch elemente dann trennen
+            std::cout << "; ";
+        }
+        
+    }
+    
+    std::cout << ")";
 }

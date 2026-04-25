@@ -20,6 +20,7 @@ class CMyVektor{
     double CalcVektorLaenge();
     CMyVektor gradient(CMyVektor x, double (*funktion)(CMyVektor x));
     void Maximierung(double (*f)(CMyVektor x), CMyVektor x, double lambdainput);
+    void printVektor(CMyVektor v); 
 
     private:
     int dimension;
