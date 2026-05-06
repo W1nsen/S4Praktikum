@@ -29,23 +29,23 @@ void CMyVektor::Maximierung(double (*funktion)(CMyVektor x), CMyVektor x, double
         CMyVektor grad = gradient(x, funktion);
         double gradLaenge = grad.CalcVektorLaenge();
 
-        // aktueller Schritt
+        // aktueller Schritt ausgabe
         std::cout << "Schritt " << schritte << ":" << std::endl;
         printVektor(x); std::cout << std::endl;
-        std::cout << "\t l " << lambda << std::endl;
-        std::cout << "\t f(x) " << funktion(x) << std::endl;
-        std::cout << "\t grad "; printVektor(grad); std::cout << std::endl;
-        std::cout << "\t ||grad|| " << gradLaenge << std::endl << std::endl;
+        std::cout << " l " << lambda << std::endl;
+        std::cout << " f(x) " << funktion(x) << std::endl;
+        std::cout << " grad "; printVektor(grad); std::cout << std::endl;
+        std::cout << " ||grad|| " << gradLaenge << std::endl << std::endl;
 
         // abbruch-check
         if (gradLaenge < 0.00001)
         {
             std::cout << "Ende wegen ||grad f(x)||<1e-5" << std::endl;
             printVektor(x); std::cout << std::endl;
-            std::cout << "\t l " << lambda << std::endl;
-            std::cout << "\t f(x) " << funktion(x) << std::endl;
-            std::cout << "\t grad "; printVektor(grad); std::cout << std::endl;
-            std::cout << "\t ||grad|| " << gradLaenge << std::endl;
+            std::cout << " l " << lambda << std::endl;
+            std::cout << " f(x) " << funktion(x) << std::endl;
+            std::cout << " grad "; printVektor(grad); std::cout << std::endl;
+            std::cout << " ||grad|| " << gradLaenge << std::endl;
             break;
         }
 
@@ -53,32 +53,32 @@ void CMyVektor::Maximierung(double (*funktion)(CMyVektor x), CMyVektor x, double
         CMyVektor xneu = x + lambda * grad;
         double f_xneu = funktion(xneu);
 
-        //check ob neu > alt
+        //check ob neuer punkt > alter punkt
         if (f_xneu > funktion(x))
         {
-            std::cout << "\t x_neu = ( " ; printVektor(grad); std::cout << std::endl;
-            std::cout << "\t f(x_neu) = "; printVektor(grad); std::cout << std::endl;
+            std::cout << " x_neu = ( " ; printVektor(xneu); std::cout << std::endl;
+            std::cout << " f(x_neu) = "; std::cout << funktion(xneu) << std::endl;
 
             // teste doppel
             double lambda_test = lambda * 2.0;
             CMyVektor xtest = x + lambda_test * grad;
             double f_xtest = funktion(xtest);
 
-            std::cout << "\t Test doppelter Schrittweite (l = " << lambda_test << "):" << std::endl;
-            std::cout << "\t x_test = ( " << xtest.GetWert(0) << "; " << xtest.GetWert(1) << ")" << std::endl;
-            std::cout << "\t f(x_test) = " << f_xtest << std::endl;
+            std::cout << " Test doppelter Schrittweite (l = " << lambda_test << "):" << std::endl;
+            std::cout << " x_test = "; printVektor(xtest); std::cout << std::endl;
+            std::cout << " f(x_test) = " << f_xtest << std::endl;
 
             //check ob doppel > neu
             if (f_xtest > f_xneu)
             {
                 lambda = lambda_test;
                 x = xtest;
-                std::cout << "\t verdoppele Schrittweite!" << std::endl << std::endl;
+                std::cout << " verdoppele Schrittweite" << std::endl << std::endl;
             }
             else
             {
                 x = xneu;
-                std::cout << "\t behalte alte Schrittweite!" << std::endl << std::endl;
+                std::cout << " behalte alte Schrittweite" << std::endl << std::endl;
             }
         }
         else
@@ -90,9 +90,9 @@ void CMyVektor::Maximierung(double (*funktion)(CMyVektor x), CMyVektor x, double
                 lambda /= 2.0;
                 xneu = x + lambda * grad;
                 
-                std::cout << "\t halbiere Schrittweite (lambda = " << lambda << "):" << std::endl;
-                std::cout << "\t x_neu = ( " ; printVektor(grad); std::cout << std::endl;
-                std::cout << "\t f(x_neu) = " << funktion(xneu) << std::endl << std::endl;
+                std::cout << " halbiere Schrittweite (lambda = " << lambda << "):" << std::endl;
+                std::cout << " x_neu = ( " ; printVektor(xneu); std::cout << std::endl;
+                std::cout << " f(x_neu) = " << funktion(xneu) << std::endl << std::endl;
             }
             x = xneu;
         }
