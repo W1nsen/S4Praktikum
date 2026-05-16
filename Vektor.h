@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
-#include "CMyMatrix.h"
+
+
 class CMyVektor{
 
     public:
@@ -29,4 +30,3 @@ class CMyVektor{
 
 CMyVektor operator+(CMyVektor a,CMyVektor b);
 CMyVektor operator*(double lambda,CMyVektor a);
-CMyVektor operator*(CMyMatrix A, CMyVektor x);

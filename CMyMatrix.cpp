@@ -1,5 +1,9 @@
 #include "CMyMatrix.h"
+#include "Vektor.h"      
 #include <iostream>
+#include <cmath>
+
+
 double CMyMatrix::GetWert(int zeile, int spalte)
 {
     int index = zeile * matrixspalte + spalte;
@@ -38,10 +42,11 @@ CMyMatrix CMyMatrix::invers()
 
     double vorfaktor = 1.0 / det;
 
-    inverted.SetWert(a * vorfaktor,1,1);
     inverted.SetWert(-b* vorfaktor,0,1);
     inverted.SetWert(-c* vorfaktor,1,0);
     inverted.SetWert(d * vorfaktor,0,0);
+    inverted.SetWert(a * vorfaktor,1,1);
+
 
     return inverted;
 }
@@ -77,3 +82,76 @@ CMyMatrix CMyMatrix::jacobi(CMyVektor x, CMyVektor (*funktion)(CMyVektor x))
     
     return ergebnis;
 }
+
+
+CMyVektor CMyMatrix::NewtonVerfahren(CMyVektor x, CMyVektor(*funktion)(CMyVektor x))
+{
+    //aktuellen funktionswert berechnen
+    CMyVektor fx = funktion(x);
+    // jacobi aufstellen
+    CMyMatrix j = jacobi(x,funktion);
+    int schritte = 0;
+
+    // mit jacobimatrix den aktuellen punkt berehcnen
+    while((fx.CalcVektorLaenge() >=  0.00001) && schritte < 50)
+    {
+
+        // jacobi invertieren
+        CMyMatrix jinvers = j.invers();
+
+    
+        // matrix mit vektor muliplizeren
+        CMyVektor delta = jinvers * fx;
+
+        // abziehen vom alten punkt
+        for (int i = 0; i < x.GetDimension(); i++)
+        {
+            //von allen komponenten
+            x.SetWert(x.GetWert(i)- delta.GetWert(i),i);
+        }
+
+        // neu berechen für nächsten puhnkt
+        fx = funktion(x);
+        j = jacobi(x,funktion);
+
+        schritte++;
+    }
+
+    
+    return x;
+}
+
+CMyVektor operator*(CMyMatrix A, CMyVektor x)
+{
+    CMyVektor ergebnis(A.GetZeile());
+
+    for (int i = 0; i < A.GetZeile(); i++)
+    {
+        double summe = 0.0;
+
+        for (int j = 0; j < A.GetSpalte(); j++)
+        {
+            summe += A.GetWert(i,j) * x.GetWert(j);
+        }
+        
+        ergebnis.SetWert(summe,i);
+    }
+    
+    return ergebnis;
+}
+
+void CMyMatrix::PrintMatrix()
+{
+    
+    for (int i = 0; i < matrixzeile; i++)
+    {
+        
+        for (int j = 0; j < matrixspalte; j++) 
+        {
+            std::cout << GetWert(i, j) << " ; ";
+        }
+        
+        std::cout << std::endl;
+    }
+}
+

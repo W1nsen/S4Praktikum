@@ -1,4 +1,5 @@
 #include "Vektor.h"
+#include "CMyMatrix.h" 
 #include <iostream>
 #include <cmath>
 
@@ -187,21 +188,3 @@ void CMyVektor::printVektor(CMyVektor v)
     std::cout << ")";
 }
 
-CMyVektor operator*(CMyMatrix A, CMyVektor x)
-{
-    CMyVektor ergebnis(A.GetZeile());
-
-    for (int i = 0; i < A.GetZeile(); i++)
-    {
-        double summe = 0.0;
-
-        for (int j = 0; j < A.GetSpalte(); j++)
-        {
-            summe += A.GetWert(i,j) * x.GetWert(j);
-        }
-        
-        ergebnis.SetWert(summe,i);
-    }
-    
-    return ergebnis;
-}

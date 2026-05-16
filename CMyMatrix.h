@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Vektor.h"
+
 class CMyMatrix
 {
     public:
@@ -20,7 +21,9 @@ class CMyMatrix
         double GetWert(int zeile, int spalte);
         CMyMatrix invers();
         CMyMatrix jacobi(CMyVektor x, CMyVektor (*funktion)(CMyVektor x));
-
+        CMyVektor NewtonVerfahren(CMyVektor startwert, CMyVektor (*funktion)(CMyVektor x));
+        void PrintMatrix();
+        
     private:
         int matrixzeile;
         int matrixspalte;
@@ -29,4 +32,5 @@ class CMyMatrix
 
     
 };
+CMyVektor operator*(CMyMatrix A, CMyVektor x);
 
