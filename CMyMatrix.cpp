@@ -95,19 +95,34 @@ CMyVektor CMyMatrix::NewtonVerfahren(CMyVektor x, CMyVektor(*funktion)(CMyVektor
     // mit jacobimatrix den aktuellen punkt berehcnen
     while((fx.CalcVektorLaenge() >=  0.00001) && schritte < 50)
     {
+        std::cout << "Schritt: " << schritte << std::endl;
+
+        std::cout << "x = "; x.printVektor(x); std::cout << std::endl;
+
+        std::cout << "Fx = "; fx.printVektor(fx); std::cout << std::endl<<std::endl;
+
+        std::cout << "Jacobi = "<< std::endl; j.PrintMatrix(); std::cout << std::endl;
+
 
         // jacobi invertieren
         CMyMatrix jinvers = j.invers();
 
+        std::cout << "Jacobi Invers = " << std::endl; jinvers.PrintMatrix(); std::cout << std::endl;
     
         // matrix mit vektor muliplizeren
-        CMyVektor delta = jinvers * fx;
+        CMyVektor dx = jinvers * fx;
+
+        std::cout << "dx = "; dx.printVektor(dx); std::cout << std::endl;
+
+        std::cout << "||fx|| = " << fx.CalcVektorLaenge(); std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
 
         // abziehen vom alten punkt
         for (int i = 0; i < x.GetDimension(); i++)
         {
             //von allen komponenten
-            x.SetWert(x.GetWert(i)- delta.GetWert(i),i);
+            x.SetWert(x.GetWert(i)- dx.GetWert(i),i);
         }
 
         // neu berechen für nächsten puhnkt
@@ -117,6 +132,29 @@ CMyVektor CMyMatrix::NewtonVerfahren(CMyVektor x, CMyVektor(*funktion)(CMyVektor
         schritte++;
     }
 
+    if(fx.CalcVektorLaenge() < 0.00001)
+    {
+        std::cout << "Ende wegen Länge: " << std::endl;
+
+        x.printVektor(x);
+        std::cout << std::endl;
+
+        std::cout << "Fx = "; fx.printVektor(fx); std::cout << std::endl;
+
+        std::cout << "||fx|| = " << fx.CalcVektorLaenge(); std::cout << std::endl;
+
+    }else if(schritte >= 50)
+    {
+        std::cout << "Ende wegen Schritte: " << std::endl;
+
+        x.printVektor(x);
+        std::cout << std::endl;
+
+        std::cout << "Fx = "; fx.printVektor(fx); std::cout << std::endl;
+
+        std::cout << "||fx|| = " << fx.CalcVektorLaenge(); std::cout << std::endl;
+
+    }
     
     return x;
 }

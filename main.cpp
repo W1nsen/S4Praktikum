@@ -74,11 +74,39 @@ void p2aufgabe2()
 }
 
 
+CMyVektor aufgabe3funktion(CMyVektor v)
+{
+    CMyVektor f(2);
+    double x = v.GetWert(0);
+    double y = v.GetWert(1); 
+
+    f.SetWert(std::pow(x, 3) * std::pow(y, 3) - 2.0 * y, 0);
+    
+    f.SetWert(x - 2.0, 1);
+
+    return f;
+}
+
+void p2aufgabe3()
+{
+    //startstelle
+    CMyVektor startstelle(2);
+    startstelle.SetWert(1,0);
+    startstelle.SetWert(1,1);
+
+    CMyMatrix matrix(0,0);
+
+    CMyVektor nullstelle = matrix.NewtonVerfahren(startstelle,aufgabe3funktion);
+
+}
 
 
 int main() 
 {
     p2aufgabe2();
+
+    std::cout << std::endl<<std::endl<<std::endl;
+    p2aufgabe3();
 
     return 0;
 }
