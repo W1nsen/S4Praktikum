@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Vektor.h" 
 #include "CMyMatrix.h"
+#include "C_DGLSolver.h"
 #include <cmath>
 
 double f(CMyVektor v)
@@ -100,13 +101,92 @@ void p2aufgabe3()
 
 }
 
+CMyVektor p4Teil1(CMyVektor y, double x)
+{
+    CMyVektor dy(2);
+
+    double y1 = y.GetWert(0);
+    double y2 = y.GetWert(1);
+
+    //erste funktion
+    dy.SetWert(2*y2 - x*y1,0);
+    dy.SetWert(y1*y2 - 2*pow(x,3),1);
+
+    return dy;
+}
+
+double p4Teil2(CMyVektor y, double x)
+{
+    double y0 = y.GetWert(0);
+    double y1 = y.GetWert(1);
+    double y2 = y.GetWert(2);
+
+    double y3 = 2.0 * x * y1 * y2 + 2.0 * (y0 * y0) * y1;
+
+    return y3;
+
+}
 
 int main() 
 {
-    p2aufgabe2();
+    std::cout << "Aufgabe1" << std::endl;
 
-    std::cout << std::endl<<std::endl<<std::endl;
-    p2aufgabe3();
+    CMyVektor ystart(2);
+    ystart.SetWert(0,0);
+    ystart.SetWert(1,1);
+
+    C_DGLSolver Solver(p4Teil1);
+
+    std::cout << "Euler:" << std::endl;
+    Solver.Euler(0,2,ystart,100,1);
+    std::cout << std::endl;
+
+    std::cout << "Heuner:" << std::endl;
+    Solver.Heuner(0,2,ystart,100,1);
+    std::cout << std::endl;
+
+
+
+    std::cout << "Aufgabe2" << std::endl;
+
+    CMyVektor yStartOrdnung(3); 
+    yStartOrdnung.SetWert(1.0, 0); 
+    yStartOrdnung.SetWert(-1.0, 1); 
+    yStartOrdnung.SetWert(2.0, 2);  
+
+    C_DGLSolver SolverOrdnung(p4Teil2);
+
+    std::cout << "Euler mit 10:" << std::endl;
+    SolverOrdnung.Euler(1,2,yStartOrdnung,10,0);
+    std::cout << std::endl;
+
+    std::cout << "Heuner mit 10:" << std::endl;
+    SolverOrdnung.Heuner(1,2,yStartOrdnung,10,0);
+    std::cout << std::endl;
+
+    std::cout << "Euler mit 100:" << std::endl;
+    SolverOrdnung.Euler(1,2,yStartOrdnung,100,0);
+    std::cout << std::endl;
+
+    std::cout << "Heuner mit 100:" << std::endl;
+    SolverOrdnung.Heuner(1,2,yStartOrdnung,100,0);
+    std::cout << std::endl;
+
+    std::cout << "Euler mit 1000:" << std::endl;
+    SolverOrdnung.Euler(1,2,yStartOrdnung,1000,0);
+    std::cout << std::endl;
+
+    std::cout << "Heuner mit 1000:" << std::endl;
+    SolverOrdnung.Heuner(1,2,yStartOrdnung,1000,0);
+    std::cout << std::endl;
+
+    std::cout << "Euler mit 10000:" << std::endl;
+    SolverOrdnung.Euler(1,2,yStartOrdnung,10000,0);
+    std::cout << std::endl;
+
+    std::cout << "Heuner mit 10000:" << std::endl;
+    SolverOrdnung.Heuner(1,2,yStartOrdnung,10000,0);
+    std::cout << std::endl;
 
     return 0;
 }
