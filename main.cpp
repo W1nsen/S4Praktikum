@@ -2,7 +2,12 @@
 #include "Vektor.h" 
 #include "CMyMatrix.h"
 #include "C_DGLSolver.h"
+#include "CKomplex.h"
 #include <cmath>
+#include <string>
+using namespace std;
+
+
 
 double f(CMyVektor v)
 {
@@ -127,66 +132,110 @@ double p4Teil2(CMyVektor y, double x)
 
 }
 
-int main() 
+// int main() 
+// {
+// //     std::cout << "Aufgabe1" << std::endl;
+
+// //     CMyVektor ystart(2);
+// //     ystart.SetWert(0,0);
+// //     ystart.SetWert(1,1);
+
+// //     C_DGLSolver Solver(p4Teil1);
+
+// //     std::cout << "Euler:" << std::endl;
+// //     Solver.Euler(0,2,ystart,100,1);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Heuner:" << std::endl;
+// //     Solver.Heuner(0,2,ystart,100,1);
+// //     std::cout << std::endl;
+
+
+
+// //     std::cout << "Aufgabe2" << std::endl;
+
+// //     CMyVektor yStartOrdnung(3); 
+// //     yStartOrdnung.SetWert(1.0, 0); 
+// //     yStartOrdnung.SetWert(-1.0, 1); 
+// //     yStartOrdnung.SetWert(2.0, 2);  
+
+// //     C_DGLSolver SolverOrdnung(p4Teil2);
+
+// //     std::cout << "Euler mit 10:" << std::endl;
+// //     SolverOrdnung.Euler(1,2,yStartOrdnung,10,0);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Heuner mit 10:" << std::endl;
+// //     SolverOrdnung.Heuner(1,2,yStartOrdnung,10,0);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Euler mit 100:" << std::endl;
+// //     SolverOrdnung.Euler(1,2,yStartOrdnung,100,0);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Heuner mit 100:" << std::endl;
+// //     SolverOrdnung.Heuner(1,2,yStartOrdnung,100,0);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Euler mit 1000:" << std::endl;
+// //     SolverOrdnung.Euler(1,2,yStartOrdnung,1000,0);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Heuner mit 1000:" << std::endl;
+// //     SolverOrdnung.Heuner(1,2,yStartOrdnung,1000,0);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Euler mit 10000:" << std::endl;
+// //     SolverOrdnung.Euler(1,2,yStartOrdnung,10000,0);
+// //     std::cout << std::endl;
+
+// //     std::cout << "Heuner mit 10000:" << std::endl;
+// //     SolverOrdnung.Heuner(1,2,yStartOrdnung,10000,0);
+// //     std::cout << std::endl;
+
+//     string DateiIN = "Datei_original1.txt";
+
+//     cout << "Datei wird eingelesen" << endl;
+
+//     vector<CKomplex> meineDaten = werte_einlesen(DateiIN);
+
+//     cout << "Datei wurde gelesen" << endl;
+
+//     string DateiOUT = "Daten_Ausgabe1.txt";
+//     double epsilon = 0.001; // Komprimierugn
+
+//     cout << "Schreibe in Kopie" << endl;
+
+//     werte_ausgeben(DateiOUT,meineDaten, epsilon);
+
+//     cout << "Kopie geschrieben!" << endl;
+//     return 0;
+// }
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "CKomplex.h"
+
+int main()
 {
-    std::cout << "Aufgabe1" << std::endl;
+    std::cout << "--- Aufgabe 2: Testlauf ---" << std::endl;
 
-    CMyVektor ystart(2);
-    ystart.SetWert(0,0);
-    ystart.SetWert(1,1);
+    // 1. Datei einlesen (unveranderter Prof-Code)
+    std::string dateiIn = "Daten_original1.txt";
+    std::cout << "Lese " << dateiIn << " ein..." << std::endl;
+    
+    std::vector<CKomplex> daten = werte_einlesen(dateiIn);
+    std::cout << "Erfolgreich eingelesen. Vektor-Groesse: " << daten.size() << std::endl;
 
-    C_DGLSolver Solver(p4Teil1);
-
-    std::cout << "Euler:" << std::endl;
-    Solver.Euler(0,2,ystart,100,1);
-    std::cout << std::endl;
-
-    std::cout << "Heuner:" << std::endl;
-    Solver.Heuner(0,2,ystart,100,1);
-    std::cout << std::endl;
-
-
-
-    std::cout << "Aufgabe2" << std::endl;
-
-    CMyVektor yStartOrdnung(3); 
-    yStartOrdnung.SetWert(1.0, 0); 
-    yStartOrdnung.SetWert(-1.0, 1); 
-    yStartOrdnung.SetWert(2.0, 2);  
-
-    C_DGLSolver SolverOrdnung(p4Teil2);
-
-    std::cout << "Euler mit 10:" << std::endl;
-    SolverOrdnung.Euler(1,2,yStartOrdnung,10,0);
-    std::cout << std::endl;
-
-    std::cout << "Heuner mit 10:" << std::endl;
-    SolverOrdnung.Heuner(1,2,yStartOrdnung,10,0);
-    std::cout << std::endl;
-
-    std::cout << "Euler mit 100:" << std::endl;
-    SolverOrdnung.Euler(1,2,yStartOrdnung,100,0);
-    std::cout << std::endl;
-
-    std::cout << "Heuner mit 100:" << std::endl;
-    SolverOrdnung.Heuner(1,2,yStartOrdnung,100,0);
-    std::cout << std::endl;
-
-    std::cout << "Euler mit 1000:" << std::endl;
-    SolverOrdnung.Euler(1,2,yStartOrdnung,1000,0);
-    std::cout << std::endl;
-
-    std::cout << "Heuner mit 1000:" << std::endl;
-    SolverOrdnung.Heuner(1,2,yStartOrdnung,1000,0);
-    std::cout << std::endl;
-
-    std::cout << "Euler mit 10000:" << std::endl;
-    SolverOrdnung.Euler(1,2,yStartOrdnung,10000,0);
-    std::cout << std::endl;
-
-    std::cout << "Heuner mit 10000:" << std::endl;
-    SolverOrdnung.Heuner(1,2,yStartOrdnung,10000,0);
-    std::cout << std::endl;
+    // 2. Datei wieder ausgeben (mit Komprimierung, z.B. epsilon = 0.01)
+    std::string dateiOut = "Daten_komprimiert1.txt";
+    double epsilon = 0.01; 
+    
+    std::cout << "Schreibe komprimierte Daten in " << dateiOut << " (Epsilon = " << epsilon << ")..." << std::endl;
+    werte_ausgeben(dateiOut, daten, epsilon);
+    
+    std::cout << "Aufgabe 2 erfolgreich beendet!" << std::endl;
 
     return 0;
 }
