@@ -125,3 +125,88 @@ void werte_ausgeben(const std::string dateiname, std::vector<CKomplex> werte, do
 		// File schliessen
 	fp.close();
 }
+
+vector<CKomplex> fourier_hin(vector<CKomplex>& input)
+{
+	double pi = M_PI;
+	int N = input.size();
+	vector<CKomplex> ergebnis(N);
+
+	for (int n = 0; n < N; n++)
+	{
+		CKomplex summe(0,0);
+
+		for (int k = 0; k < N; k++)
+		{
+			// Phi berechnen
+            double phi = - (2.0 * pi * n * k) / N;
+
+            // Mit Phi die komplexe Zahl erstellen
+            CKomplex e_hoch_j_phi(phi);
+
+			//Multiplizieren und summieren
+            summe = summe + (input[k] * e_hoch_j_phi);
+		}
+
+
+		//	1/Wurzel(N)
+		double vorfaktor = 1.0 / std::sqrt(N);
+        ergebnis[n] = vorfaktor * summe;
+	}
+	
+	return ergebnis;
+}
+
+vector<CKomplex> fourier_rueck(vector<CKomplex>& input)
+{
+	double pi = M_PI;
+	int N = input.size();
+	vector<CKomplex> ergebnis(N);
+
+	for (int n = 0; n < N; n++)
+	{
+		CKomplex summe(0,0);
+
+		for (int k = 0; k < N; k++)
+		{
+			// Phi berechnen
+            double phi = (2.0 * pi * n * k) / N;
+
+            // Mit Phi die komplexe Zahl erstellen
+            CKomplex e_hoch_j_phi(phi);
+
+			//Multiplizieren und summieren
+            summe = summe + (input[k] * e_hoch_j_phi);
+		}
+
+
+		//	1/Wurzel(N)
+		double vorfaktor = 1.0 / std::sqrt(N);
+        ergebnis[n] = vorfaktor * summe;
+	}
+	
+	return ergebnis;
+}
+
+double maximale_abweichung(std::vector<CKomplex>& original, std::vector<CKomplex>& komprimiert)
+{
+	double abweichung;
+
+	for (size_t i = 0; i < original.size(); i++)
+    {
+        // Differenz zwischen Original und Rekonstruktion bilden
+        CKomplex diff = original[i] + (-1.0 * komprimiert[i]); // oder falls du operator- hast: orig[i] - rek[i]
+        
+        // Betrag der Differenz bestimmen
+        double fehler = diff.abs();
+
+        // Wenn dieser Fehler größer ist als der bisherige Höchstwert, merken
+        if (fehler > abweichung)
+        {
+            abweichung = fehler;
+        }
+    }
+
+
+	return abweichung;
+}

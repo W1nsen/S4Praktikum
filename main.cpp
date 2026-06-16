@@ -192,50 +192,77 @@ double p4Teil2(CMyVektor y, double x)
 // //     std::cout << "Heuner mit 10000:" << std::endl;
 // //     SolverOrdnung.Heuner(1,2,yStartOrdnung,10000,0);
 // //     std::cout << std::endl;
+//}
 
-//     string DateiIN = "Datei_original1.txt";
+// void test_datei(string dateiname)
+// {
+//     cout << " Bei " << dateiname << endl;
 
-//     cout << "Datei wird eingelesen" << endl;
+//     // Lesen
+//     vector<CKomplex> original = werte_einlesen(dateiname);
 
-//     vector<CKomplex> meineDaten = werte_einlesen(DateiIN);
+//     // Fourier transformieren
+//     vector<CKomplex> fourierTrafo = fourier_hin(original);
 
-//     cout << "Datei wurde gelesen" << endl;
+//     double epsilons[] = {-1,0.001,0.01,0.1,1};
 
-//     string DateiOUT = "Daten_Ausgabe1.txt";
-//     double epsilon = 0.001; // Komprimierugn
+//     string namen[] = 
+//     {"Standard-Epsilon: ",
+//     "epsilon=0.001: ",
+//     "epsilon=0.01: ",
+//     "epsilon=0.1: ",
+//     "epsilon=1: "};
 
-//     cout << "Schreibe in Kopie" << endl;
+//     string epsilonsDateiName[] = {"default", "0001", "001", "01", "10"};
+//     for (int i = 0; i < 5; i++)
+//     {
 
-//     werte_ausgeben(DateiOUT,meineDaten, epsilon);
+//         // erstelle datei
+//         string ausgabe_name = dateiname + "_komp_" + epsilonsDateiName[i] + ".txt";
 
-//     cout << "Kopie geschrieben!" << endl;
-//     return 0;
+//         // komprimieren
+//         if (i == 0) {
+//             werte_ausgeben(ausgabe_name, fourierTrafo);
+//         } else {
+//             werte_ausgeben(ausgabe_name, fourierTrafo, epsilons[i]);
+//         }
+
+//         // komprimierte datei lesen
+//         vector<CKomplex> kompDaten = werte_einlesen(ausgabe_name);
+
+//         // rueck transformieren
+//         vector<CKomplex> rueckTrafo = fourier_rueck(kompDaten);
+
+//         // abweichung berechnen
+//         double abweichung = maximale_abweichung(original, rueckTrafo);
+
+//         std::cout << "Maximale Abweichung bei " << namen[i] << abweichung << std::endl;
+//     }
+//     cout << endl;
 // }
+void test_datei(string dateiname)
+{
+    cout << " Bei " << dateiname << endl;
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include "CKomplex.h"
+    // 1. Lesen
+    vector<CKomplex> original = werte_einlesen(dateiname);
 
+    // 2. Fourier transformieren
+    vector<CKomplex> fourierTrafo = fourier_hin(original);
+
+    // 3. DIREKTE RÜCKTRANSFORMATION (Ohne Speichern, ohne Epsilon!)
+    vector<CKomplex> direkt_rueck = fourier_rueck(fourierTrafo);
+
+    // 4. Abweichung direkt berechnen
+    double direkte_abweichung = maximale_abweichung(original, direkt_rueck);
+    cout << "  -> DIREKTE Abweichung (ohne Speichern): " << direkte_abweichung << endl;
+    
+    // ... hier drunter kannst du deine alte Schleife erst mal so lassen wie sie ist ...
+}
 int main()
 {
-    std::cout << "--- Aufgabe 2: Testlauf ---" << std::endl;
-
-    // 1. Datei einlesen (unveranderter Prof-Code)
-    std::string dateiIn = "Daten_original1.txt";
-    std::cout << "Lese " << dateiIn << " ein..." << std::endl;
-    
-    std::vector<CKomplex> daten = werte_einlesen(dateiIn);
-    std::cout << "Erfolgreich eingelesen. Vektor-Groesse: " << daten.size() << std::endl;
-
-    // 2. Datei wieder ausgeben (mit Komprimierung, z.B. epsilon = 0.01)
-    std::string dateiOut = "Daten_komprimiert1.txt";
-    double epsilon = 0.01; 
-    
-    std::cout << "Schreibe komprimierte Daten in " << dateiOut << " (Epsilon = " << epsilon << ")..." << std::endl;
-    werte_ausgeben(dateiOut, daten, epsilon);
-    
-    std::cout << "Aufgabe 2 erfolgreich beendet!" << std::endl;
+    test_datei("Daten_original1.txt");
+    test_datei("Daten_original2.txt");
 
     return 0;
 }
