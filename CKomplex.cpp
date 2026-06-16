@@ -139,7 +139,7 @@ vector<CKomplex> fourier_hin(vector<CKomplex>& input)
 		for (int k = 0; k < N; k++)
 		{
 			// Phi berechnen
-            double phi = - (2.0 * pi * n * k) / N;
+            double phi = - (2.0 * M_PI * n * k) / N;
 
             // Mit Phi die komplexe Zahl erstellen
             CKomplex e_hoch_j_phi(phi);
@@ -170,7 +170,7 @@ vector<CKomplex> fourier_rueck(vector<CKomplex>& input)
 		for (int k = 0; k < N; k++)
 		{
 			// Phi berechnen
-            double phi = (2.0 * pi * n * k) / N;
+            double phi = (2.0 * M_PI * n * k) / N;
 
             // Mit Phi die komplexe Zahl erstellen
             CKomplex e_hoch_j_phi(phi);
@@ -190,7 +190,7 @@ vector<CKomplex> fourier_rueck(vector<CKomplex>& input)
 
 double maximale_abweichung(std::vector<CKomplex>& original, std::vector<CKomplex>& komprimiert)
 {
-	double abweichung;
+	double abweichung = 0.0;
 
 	for (size_t i = 0; i < original.size(); i++)
     {

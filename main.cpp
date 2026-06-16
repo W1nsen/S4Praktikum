@@ -194,75 +194,96 @@ double p4Teil2(CMyVektor y, double x)
 // //     std::cout << std::endl;
 //}
 
-// void test_datei(string dateiname)
-// {
-//     cout << " Bei " << dateiname << endl;
-
-//     // Lesen
-//     vector<CKomplex> original = werte_einlesen(dateiname);
-
-//     // Fourier transformieren
-//     vector<CKomplex> fourierTrafo = fourier_hin(original);
-
-//     double epsilons[] = {-1,0.001,0.01,0.1,1};
-
-//     string namen[] = 
-//     {"Standard-Epsilon: ",
-//     "epsilon=0.001: ",
-//     "epsilon=0.01: ",
-//     "epsilon=0.1: ",
-//     "epsilon=1: "};
-
-//     string epsilonsDateiName[] = {"default", "0001", "001", "01", "10"};
-//     for (int i = 0; i < 5; i++)
-//     {
-
-//         // erstelle datei
-//         string ausgabe_name = dateiname + "_komp_" + epsilonsDateiName[i] + ".txt";
-
-//         // komprimieren
-//         if (i == 0) {
-//             werte_ausgeben(ausgabe_name, fourierTrafo);
-//         } else {
-//             werte_ausgeben(ausgabe_name, fourierTrafo, epsilons[i]);
-//         }
-
-//         // komprimierte datei lesen
-//         vector<CKomplex> kompDaten = werte_einlesen(ausgabe_name);
-
-//         // rueck transformieren
-//         vector<CKomplex> rueckTrafo = fourier_rueck(kompDaten);
-
-//         // abweichung berechnen
-//         double abweichung = maximale_abweichung(original, rueckTrafo);
-
-//         std::cout << "Maximale Abweichung bei " << namen[i] << abweichung << std::endl;
-//     }
-//     cout << endl;
-// }
 void test_datei(string dateiname)
 {
     cout << " Bei " << dateiname << endl;
 
-    // 1. Lesen
+    // Lesen
     vector<CKomplex> original = werte_einlesen(dateiname);
 
-    // 2. Fourier transformieren
+    // Fourier transformieren
     vector<CKomplex> fourierTrafo = fourier_hin(original);
 
-    // 3. DIREKTE RÜCKTRANSFORMATION (Ohne Speichern, ohne Epsilon!)
-    vector<CKomplex> direkt_rueck = fourier_rueck(fourierTrafo);
+    double epsilons[] = {-1,0.001,0.01,0.1,1};
 
-    // 4. Abweichung direkt berechnen
-    double direkte_abweichung = maximale_abweichung(original, direkt_rueck);
-    cout << "  -> DIREKTE Abweichung (ohne Speichern): " << direkte_abweichung << endl;
-    
-    // ... hier drunter kannst du deine alte Schleife erst mal so lassen wie sie ist ...
+    string namen[] = 
+    {"Standard-Epsilon: ",
+    "epsilon=0.001: ",
+    "epsilon=0.01: ",
+    "epsilon=0.1: ",
+    "epsilon=1: "};
+
+    string epsilonsDateiName[] = {"default", "0001", "001", "01", "10"};
+    for (int i = 0; i < 5; i++)
+    {
+
+        // erstelle datei
+        string ausgabe_name = dateiname + "_komp_" + epsilonsDateiName[i] + ".txt";
+
+        // komprimieren
+        if (i == 0) {
+            werte_ausgeben(ausgabe_name, fourierTrafo);
+        } else {
+            werte_ausgeben(ausgabe_name, fourierTrafo, epsilons[i]);
+        }
+
+        // komprimierte datei lesen
+        vector<CKomplex> kompDaten = werte_einlesen(ausgabe_name);
+
+        // rueck transformieren
+        vector<CKomplex> rueckTrafo = fourier_rueck(kompDaten);
+
+        // abweichung berechnen
+        double abweichung = maximale_abweichung(original, rueckTrafo);
+
+        std::cout << "Maximale Abweichung bei " << namen[i] << abweichung << std::endl;
+    }
+    cout << endl;
 }
+
+void bildtrafo(string bildname)
+{
+    string dateiname = bildname + ".txt";
+
+    cout << "Lese Datei..." << endl;
+
+    vector<CKomplex> bild_original = werte_einlesen(dateiname);
+
+    cout << "Bild trafo..." << endl;
+    vector<CKomplex> bild_fourier = fourier_hin(bild_original);
+
+    double epsilons[] = {10.0, 30.0, 100.0, 300.0, 1000.0};
+    string eps_namen[] = {"10", "30", "100", "300", "1000"};
+
+    for (int i = 0; i < 5; i++)
+    {
+        // name für kompFreqDatei
+        string komp = bildname + "_fourier_eps" + eps_namen[i] + ".txt";
+        
+        // Frequenzen filtern
+        werte_ausgeben(komp, bild_fourier, epsilons[i]);
+
+        // Frequenzen einlesen
+        vector<CKomplex> geladene_frequenzen = werte_einlesen(komp);
+
+        // ruecktrafo
+        vector<CKomplex> bild_rekonstruiert = fourier_rueck(geladene_frequenzen);
+
+        // name für kompdatei
+        string datei_fertig = bildname + "_komp_" + eps_namen[i] + ".txt";
+        
+        // default weil alle pixeln
+        werte_ausgeben(datei_fertig, bild_rekonstruiert);
+        cout << "Datei erzeugt: " << datei_fertig << endl;
+    }
+}
+
 int main()
 {
+    
     test_datei("Daten_original1.txt");
     test_datei("Daten_original2.txt");
 
+    bildtrafo("Bild");
     return 0;
 }
