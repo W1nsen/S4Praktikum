@@ -128,7 +128,6 @@ void werte_ausgeben(const std::string dateiname, std::vector<CKomplex> werte, do
 
 vector<CKomplex> fourier_hin(vector<CKomplex>& input)
 {
-	double pi = M_PI;
 	int N = input.size();
 	vector<CKomplex> ergebnis(N);
 
@@ -159,7 +158,6 @@ vector<CKomplex> fourier_hin(vector<CKomplex>& input)
 
 vector<CKomplex> fourier_rueck(vector<CKomplex>& input)
 {
-	double pi = M_PI;
 	int N = input.size();
 	vector<CKomplex> ergebnis(N);
 
