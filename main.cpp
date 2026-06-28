@@ -6,9 +6,10 @@
 #include <cmath>
 #include <string>
 using namespace std;
+#include "CZufall.h"
+#include "Karte.h"
 
-
-
+#pragma region  allesAndere
 double f(CMyVektor v)
 {
     double x = v.GetWert(0);
@@ -139,7 +140,9 @@ double p4Teil2(CMyVektor y, double x)
 // //     CMyVektor ystart(2);
 // //     ystart.SetWert(0,0);
 // //     ystart.SetWert(1,1);
+#pragma endregion allesAndere
 
+#pragma region DGLSolver
 // //     C_DGLSolver Solver(p4Teil1);
 
 // //     std::cout << "Euler:" << std::endl;
@@ -193,7 +196,9 @@ double p4Teil2(CMyVektor y, double x)
 // //     SolverOrdnung.Heuner(1,2,yStartOrdnung,10000,0);
 // //     std::cout << std::endl;
 //}
+#pragma endregion DGLSolver
 
+#pragma region fourier
 void test_datei(string dateiname)
 {
     cout << " Bei " << dateiname << endl;
@@ -253,12 +258,12 @@ void bildtrafo(string bildname)
     vector<CKomplex> bild_fourier = fourier_hin(bild_original);
 
     double epsilons[] = {10.0, 30.0, 100.0, 300.0, 1000.0};
-    string eps_namen[] = {"10", "30", "100", "300", "1000"};
+    string namen[] = {"10", "30", "100", "300", "1000"};
 
     for (int i = 0; i < 5; i++)
     {
         // name für kompFreqDatei
-        string komp = bildname + "_fourier_eps" + eps_namen[i] + ".txt";
+        string komp = bildname + "_fourier_eps" + namen[i] + ".txt";
         
         // Frequenzen filtern
         werte_ausgeben(komp, bild_fourier, epsilons[i]);
@@ -270,7 +275,7 @@ void bildtrafo(string bildname)
         vector<CKomplex> bild_rekonstruiert = fourier_rueck(geladene_frequenzen);
 
         // name für kompdatei
-        string datei_fertig = bildname + "_komp_" + eps_namen[i] + ".txt";
+        string datei_fertig = bildname + "_komp_" + namen[i] + ".txt";
         
         // default weil alle pixeln
         werte_ausgeben(datei_fertig, bild_rekonstruiert);
@@ -278,12 +283,98 @@ void bildtrafo(string bildname)
     }
 }
 
+
+// int main()
+// {
+    
+//     test_datei("Daten_original1.txt");
+//     test_datei("Daten_original2.txt");
+
+//     bildtrafo("Bild");
+//     return 0;
+// }
+#pragma endregion fourier
+
 int main()
 {
-    
-    test_datei("Daten_original1.txt");
-    test_datei("Daten_original2.txt");
 
-    bildtrafo("Bild");
+    #pragma region Aufgabe1
+    CZufall obj;
+    
+        cout << "Aufgabe a" << endl;
+        obj.initialisiere(10);
+        obj.test(3,7,10000);
+        cout << endl;
+        obj.initialisiere(10);
+        obj.test(3,7,10000);
+        cout << endl;
+        obj.initialisiere(10);
+        obj.test(3,7,10000);
+        cout << endl;
+    
+        cout << "Aufgabe b" << endl;
+        obj.initialisiere(10);
+        obj.test(3,7,10000);
+        cout << endl;
+        obj.initialisiere(15);
+        obj.test(3,7,10000);
+        cout << endl;
+        obj.initialisiere(20);
+        obj.test(3,7,10000);
+        cout << endl;
+
+        cout << "Aufgabe c" << endl ;
+        obj.initialisiere(time(NULL));
+        obj.test(3,7,10000);
+        cout << endl;
+        obj.initialisiere(time(NULL));
+        obj.test(3,7,10000);
+        cout << endl;
+        obj.initialisiere(time(NULL));
+        obj.test(3,7,10000);
+        cout << endl;
+        
+        cout << "Aufgabe d " << endl ;
+        obj.test_falsch(3,7,10000);
+        cout << endl;
+    #pragma endregion Aufgabe1
+
+    // Monte Carlo
+    Karte cardobj(0,0);
+    int N = 0;
+    double gesamtPaare = 0.0, gesamtDrillinge = 0.0;
+
+    cout << "Wie oft wiederholen? ";
+    cin >> N;
+    
+    for (int i = 0; i < N; i++)
+    {
+        //Karten ziehen
+        vector<Karte>hand = cardobj.KartenZiehen();
+
+        int gefundenePaare = 0, gefundeneDrillinge = 0;
+
+        cardobj.checkPaar(hand,gefundenePaare,gefundeneDrillinge);
+
+        if (gefundenePaare >= 2)
+        {
+            gesamtPaare++;
+        }
+        if (gefundeneDrillinge >= 1)
+        {
+            gesamtDrillinge++;
+        }
+
+    }
+    
+
+    // Wahrscheinlichkeiten ausrechnen
+    double chancePaare = (gesamtPaare/N) * 100;
+    double chanceDrillinge = (gesamtDrillinge/N)*100;
+
+    cout << "Wahrscheinlichkeit für Paare: " << chancePaare << endl;
+    cout << "Wahrscheinlichkeit für Drillinge: " << chanceDrillinge << endl;
+
+
     return 0;
 }
